@@ -1,0 +1,146 @@
+{
+  "trips" : [ {
+    "busId" : "Bus37",
+    "companyId" : "Company1",
+    "durationSecs" : 300,
+    "fromStopId" : "Stop1",
+    "started" : "22-01-2021 13:00:00",
+    "finished" : "22-01-2021 13:05:00",
+    "chargeAmount" : 3.25,
+    "primaryAccountNumber" : "5500005555555559",
+    "toStopId" : "Stop2",
+    "status" : "COMPLETED"
+  }, {
+    "busId" : "Bus33",
+    "companyId" : "Company1",
+    "durationSecs" : 840,
+    "fromStopId" : "Stop2",
+    "started" : "22-01-2021 13:01:00",
+    "finished" : "",
+    "chargeAmount" : 5.5,
+    "primaryAccountNumber" : "5019717010103742",
+    "toStopId" : "",
+    "status" : "INCOMPLETED"
+  }, {
+    "busId" : "Bus30",
+    "companyId" : "Company1",
+    "durationSecs" : 3,
+    "fromStopId" : "Stop2",
+    "started" : "22-01-2021 13:20:00",
+    "finished" : "22-01-2021 13:20:03",
+    "chargeAmount" : 0.0,
+    "primaryAccountNumber" : "5500005555555559",
+    "toStopId" : "Stop2",
+    "status" : "CANCELLED"
+  }, {
+    "busId" : "Bus31",
+    "companyId" : "Company1",
+    "durationSecs" : 600,
+    "fromStopId" : "Stop1",
+    "started" : "22-01-2021 12:05:00",
+    "finished" : "22-01-2021 12:15:00",
+    "chargeAmount" : 7.3,
+    "primaryAccountNumber" : "6011000400000000",
+    "toStopId" : "Stop3",
+    "status" : "COMPLETED"
+  }, {
+    "busId" : "Bus36",
+    "companyId" : "Company1",
+    "durationSecs" : 30,
+    "fromStopId" : "Stop1",
+    "started" : "22-01-2021 13:05:00",
+    "finished" : "22-01-2021 13:05:30",
+    "chargeAmount" : 0.0,
+    "primaryAccountNumber" : "6011000400000000",
+    "toStopId" : "Stop1",
+    "status" : "CANCELLED"
+  }, {
+    "busId" : "Bus31",
+    "companyId" : "Company1",
+    "durationSecs" : 1500,
+    "fromStopId" : "Stop2",
+    "started" : "22-01-2021 14:05:00",
+    "finished" : "",
+    "chargeAmount" : 5.5,
+    "primaryAccountNumber" : "6011000400000000",
+    "toStopId" : "",
+    "status" : "INCOMPLETED"
+  }, {
+    "busId" : "Bus34",
+    "companyId" : "Company1",
+    "durationSecs" : 780,
+    "fromStopId" : "Stop3",
+    "started" : "22-01-2021 14:00:00",
+    "finished" : "",
+    "chargeAmount" : 7.3,
+    "primaryAccountNumber" : "5555555555554444",
+    "toStopId" : "",
+    "status" : "INCOMPLETED"
+  }, {
+    "busId" : "Bus35",
+    "companyId" : "Company1",
+    "durationSecs" : 17220,
+    "fromStopId" : "Stop2",
+    "started" : "22-01-2021 14:13:00",
+    "finished" : "",
+    "chargeAmount" : 5.5,
+    "primaryAccountNumber" : "5555555555554444",
+    "toStopId" : "",
+    "status" : "INCOMPLETED"
+  }, {
+    "busId" : "Bus35",
+    "companyId" : "Company1",
+    "durationSecs" : 3600,
+    "fromStopId" : "Stop3",
+    "started" : "22-01-2021 19:00:00",
+    "finished" : "",
+    "chargeAmount" : 7.3,
+    "primaryAccountNumber" : "5555555555554444",
+    "toStopId" : "",
+    "status" : "INCOMPLETED"
+  }, {
+    "busId" : "Bus37",
+    "companyId" : "Company1",
+    "durationSecs" : -18000,
+    "fromStopId" : "Stop2",
+    "started" : "22-01-2021 20:00:00",
+    "finished" : "",
+    "chargeAmount" : 5.5,
+    "primaryAccountNumber" : "5555555555554444",
+    "toStopId" : "",
+    "status" : "INCOMPLETED"
+  }, {
+    "busId" : "Bus34",
+    "companyId" : "Company1",
+    "durationSecs" : 17100,
+    "fromStopId" : "Stop1",
+    "started" : "22-01-2021 13:15:00",
+    "finished" : "",
+    "chargeAmount" : 7.3,
+    "primaryAccountNumber" : "5019717010103742",
+    "toStopId" : "",
+    "status" : "INCOMPLETED"
+  }, {
+    "busId" : "Bus37",
+    "companyId" : "Company1",
+    "durationSecs" : 630,
+    "fromStopId" : "Stop2",
+    "started" : "22-01-2021 15:00:00",
+    "finished" : "22-01-2021 15:10:30",
+    "chargeAmount" : 5.5,
+    "primaryAccountNumber" : "5555555555554444",
+    "toStopId" : "Stop2",
+    "status" : "COMPLETED"
+  }, {
+    "busId" : "Bus34",
+    "companyId" : "Company1",
+    "durationSecs" : 600,
+    "fromStopId" : "Stop1",
+    "started" : "22-01-2021 18:00:00",
+    "finished" : "22-01-2021 18:10:00",
+    "chargeAmount" : 3.25,
+    "primaryAccountNumber" : "5019717010103742",
+    "toStopId" : "Stop2",
+    "status" : "COMPLETED"
+  } ]
+}
