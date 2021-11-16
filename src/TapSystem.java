@@ -37,6 +37,7 @@ public class TapSystem {
 	public JSONArray completeTrip(long PAN, tap currenttap, JSONArray arr) {
 		JSONObject trip = new JSONObject();
 		tap previoustap = this.previousTaps.get(PAN); //Getting the previous tap from the hashmap
+		
 		long duration = currenttap.tapdate.getTime() - previoustap.tapdate.getTime();
 		duration = duration / 1000; //Obtaining duration in seconds
 		this.previousTaps.remove(PAN); //Removing the previous tap according to PAN
@@ -53,7 +54,7 @@ public class TapSystem {
 			trip = fillJsonOutput(previoustap, previoustap, TripStatus.INCOMPLETE, duration, PAN);
 			this.previousTaps.put(PAN, currenttap); //If the trip is incomplete, adds the current to the previous taps. 
 		}
-
+		
 		arr.add(trip); //Adds to the output array. 
 		return arr;
 	}
@@ -141,7 +142,8 @@ public class TapSystem {
 
 	public void readjson() {
 		JSONArray tripsArray = new JSONArray(); // Array to store the trips.
-		try (JsonParser jparser = new JsonFactory().createParser(new File("src/taps.json"))) {
+		Date currentTime=null;
+		try (JsonParser jparser = new JsonFactory().createParser(new File("src/testtaps.json"))) {
 
 			while (jparser.nextToken() != JsonToken.END_OBJECT) {
 				String fieldname = "taps"; // Used to access the taps array in JSON input
@@ -192,6 +194,7 @@ public class TapSystem {
 							}
 							SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 							Date taptime = formatter.parse(taptimestring);
+							currentTime = taptime; //Assuming a linear sequence, sets the current time to the latest tap object
 							tap currentTap = new tap(taptime, busid, companyid, stopid, taptype); //Creating a tap object
 							pan = pan.trim();
 							long PAN = Long.parseLong(pan);
@@ -203,6 +206,17 @@ public class TapSystem {
 						}
 					}
 				}
+			}
+			
+			for(long pan : this.previousTaps.keySet()) { //Obtains the Single ON Taps and assigns them as incomplete. From the sixth assumption
+				tap incompleteTap = this.previousTaps.get(pan); 
+				long duration = currentTime.getTime() - incompleteTap.tapdate.getTime(); // THe current time is the latest in the JSON that has been read.
+				duration = duration/1000;
+				if (incompleteTap.taptype == TapType.ON) {   
+					JSONObject incompletetripObject =  fillJsonOutput(incompleteTap, incompleteTap, TripStatus.INCOMPLETE, duration, pan);
+					tripsArray.add(incompletetripObject);
+				}
+				
 			}
 
 			JSONObject outputObject = new JSONObject(); //Creating output object that will be printed to the JSON file

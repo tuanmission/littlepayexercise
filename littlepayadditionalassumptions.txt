@@ -1,0 +1,10 @@
+Assumptions:
+Each stop will be 15 minutes. 
+One customer will take a maximum of 15 minutes. One customer for the whole trip. 
+
+This program will run at anytime of day. Any Record that happened less than 15 minutes ago, when the program run. The customer is still on their trip. 
+
+If it happened longer than 15 minutes taken into account, this program will deal with that 
+
+
+Current and end of the file.Touch on and touch off. 

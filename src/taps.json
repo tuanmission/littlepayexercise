@@ -153,7 +153,7 @@
 			"busId": "Bus37",
 			"primaryAccountNumber": "5555555555554444"
 		},
-			{
+		{
 			"id": 19,
 			"datetimeUTC": "22-01-2021 18:00:00",
 			"tapType": "ON",
@@ -190,8 +190,57 @@
 			"companyId": "Company1",
 			"busId": "Bus34",
 			"primaryAccountNumber": "5019717010103742"
-		}
+		},
 		
+		{
+			"id": 21,
+			"datetimeUTC": "22-01-2021 14:15:00",
+			"tapType": "ON",
+			"stopId": "Stop1",
+			"companyId": "Company1",
+			"busId": "Bus34",
+			"primaryAccountNumber": "5019717010103742"
+		},
+		
+		{
+			"id": 22,
+			"datetimeUTC": "22-01-2021 17:10:00",
+			"tapType": "ON",
+			"stopId": "Stop1",
+			"companyId": "Company1",
+			"busId": "Bus37",
+			"primaryAccountNumber": "5555555555554444"
+		},
+		
+		{
+			"id": 23,
+			"datetimeUTC": "22-01-2021 14:30:00",
+			"tapType": "ON",
+			"stopId": "Stop1",
+			"companyId": "Company1",
+			"busId": "Bus34",
+			"primaryAccountNumber": "6011000400000000"
+		},
+		
+		{
+			"id": 24,
+			"datetimeUTC": "22-01-2021 20:00:00",
+			"tapType": "ON",
+			"stopId": "Stop2",
+			"companyId": "Company1",
+			"busId": "Bus37",
+			"primaryAccountNumber": "5555555555554444"
+		},
+		
+		{
+			"id": 25,
+			"datetimeUTC": "22-01-2021 18:00:00",
+			"tapType": "OFF",
+			"stopId": "Stop1",
+			"companyId": "Company1",
+			"busId": "Bus34",
+			"primaryAccountNumber": "5019717010103742"
+		}
 		
 	]
 }
