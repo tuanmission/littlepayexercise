@@ -30,27 +30,38 @@ public class TapSystem {
 		this.previousTaps = new HashMap<Long, tap>();
 	}
 
-	public void addTapOn(long PAN, tap currenttap) {
-		this.previousTaps.put(PAN, currenttap);
+	public JSONArray addTapOn(JSONArray tripsArray,String pan, Date taptime, String busid, String companyid, String stopid, TapType taptype) {
+		
+		tap currentTap = new tap(taptime, busid, companyid, stopid, taptype); //Creating a tap object
+		pan = pan.trim();
+		long PAN = Long.parseLong(pan);
+		if (this.previousTaps.containsKey(PAN)) { //If there is a previous tap with the PAN completes the trip, otherwises adds to hashmap
+			tripsArray = completeTrip(PAN, currentTap, tripsArray);
+		} else {
+			this.previousTaps.put(PAN, currentTap);
+		}
+		
+		return tripsArray;
+		
 	}
 
 	public JSONArray completeTrip(long PAN, tap currenttap, JSONArray arr) {
 		JSONObject trip = new JSONObject();
 		tap previoustap = this.previousTaps.get(PAN); //Getting the previous tap from the hashmap
 		
-		long duration = currenttap.tapdate.getTime() - previoustap.tapdate.getTime();
+		long duration = currenttap.getTapDate().getTime() - previoustap.getTapDate().getTime();
 		duration = duration / 1000; //Obtaining duration in seconds
 		this.previousTaps.remove(PAN); //Removing the previous tap according to PAN
-		if (previoustap.taptype == TapType.ON && currenttap.taptype == TapType.OFF) { //Condition to determine if trip is complete or not. 
+		if (previoustap.getTapType() == TapType.ON && currenttap.getTapType() == TapType.OFF) { //Condition to determine if trip is complete or not. 
 
-			if (duration < 200 && previoustap.busid.equals(currenttap.busid) //If the bus id of the destination and orgin matches, it is a complete trip. 
-					&& previoustap.stopid.equals(currenttap.stopid)) { //Trip is cancelled, if the user cancels within 3 minutes
+			if (duration < 200 && previoustap.getBusId().equals(currenttap.getBusId()) //If the bus id of the destination and orgin matches, it is a complete trip. 
+					&& previoustap.getStopId().equals(currenttap.getStopId())) { //Trip is cancelled, if the user cancels within 3 minutes
 				trip = fillJsonOutput(previoustap, currenttap, TripStatus.CANCELLED, duration, PAN);
 			} else {
 				trip = fillJsonOutput(previoustap, currenttap, TripStatus.COMPLETE, duration, PAN);
 			}
 
-		} else if (previoustap.taptype == TapType.ON && currenttap.taptype == TapType.ON) {
+		} else if (previoustap.getTapType() == TapType.ON && currenttap.getTapType() == TapType.ON) {
 			trip = fillJsonOutput(previoustap, previoustap, TripStatus.INCOMPLETE, duration, PAN);
 			this.previousTaps.put(PAN, currenttap); //If the trip is incomplete, adds the current to the previous taps. 
 		}
@@ -63,7 +74,7 @@ public class TapSystem {
 		JSONObject output = new JSONObject(); //Creating output JSON object, simple dateformat.
 	
 		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-		String started = formatter.format(previoustap.tapdate);
+		String started = formatter.format(previoustap.getTapDate());
 
 		String finaldestination = "";
 		String finished = "";
@@ -72,20 +83,20 @@ public class TapSystem {
 		String status = "";
 		switch (tripstatus) { //Assigning outputs based on trip conditons
 		case COMPLETE:
-			chargeamount = returnCompleteTrip(previoustap.stopid, currenttap.stopid);
+			chargeamount = returnCompleteTrip(previoustap.getStopId(), currenttap.getStopId());
 			status = "COMPLETED"; 
-			finaldestination = currenttap.stopid; //If the trip is complete, gets the fare and sets the destination to the current stop.
-			finished = formatter.format(currenttap.tapdate);
+			finaldestination = currenttap.getStopId(); //If the trip is complete, gets the fare and sets the destination to the current stop.
+			finished = formatter.format(currenttap.getTapDate());
 			break;
 		case INCOMPLETE:
-			chargeamount = returnIncompleteTrip(previoustap.stopid);
+			chargeamount = returnIncompleteTrip(previoustap.getStopId());
 			status = "INCOMPLETED"; //If the trip is incomplete, the destination and finished time is left blank. As the trip is incomplete 
 
 			break;
 		case CANCELLED:
 			status = "CANCELLED"; 
-			finaldestination = currenttap.stopid;
-			finished = formatter.format(currenttap.tapdate);
+			finaldestination = currenttap.getStopId();
+			finished = formatter.format(currenttap.getTapDate());
 			break;
 		}
 
@@ -95,11 +106,11 @@ public class TapSystem {
 		output.put("started", started);  //Assigning variables to JSON fields. 
 		output.put("finished", finished);
 		output.put("durationSecs", duration);
-		output.put("fromStopId", previoustap.stopid);
+		output.put("fromStopId", previoustap.getStopId());
 		output.put("toStopId", finaldestination);
 		output.put("chargeAmount", chargeamount);
-		output.put("companyId", currenttap.companyid);
-		output.put("busId", currenttap.busid);
+		output.put("companyId", currenttap.getCompanyId());
+		output.put("busId", currenttap.getBusId());
 		output.put("primaryAccountNumber", pan);
 		output.put("status", status);
 		return output;
@@ -143,7 +154,7 @@ public class TapSystem {
 	public void readjson() {
 		JSONArray tripsArray = new JSONArray(); // Array to store the trips.
 		Date currentTime=null;
-		try (JsonParser jparser = new JsonFactory().createParser(new File("src/testtaps.json"))) {
+		try (JsonParser jparser = new JsonFactory().createParser(new File("src/taps.json"))) {
 
 			while (jparser.nextToken() != JsonToken.END_OBJECT) {
 				String fieldname = "taps"; // Used to access the taps array in JSON input
@@ -195,38 +206,17 @@ public class TapSystem {
 							SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 							Date taptime = formatter.parse(taptimestring);
 							currentTime = taptime; //Assuming a linear sequence, sets the current time to the latest tap object
-							tap currentTap = new tap(taptime, busid, companyid, stopid, taptype); //Creating a tap object
-							pan = pan.trim();
-							long PAN = Long.parseLong(pan);
-							if (this.previousTaps.containsKey(PAN)) { //If there is a previous tap with the PAN completes the trip, otherwises adds to hashmap
-								tripsArray = completeTrip(PAN, currentTap, tripsArray);
-							} else {
-								addTapOn(PAN, currentTap);
-							}
+							tripsArray = addTapOn(tripsArray,pan, taptime, busid, companyid, stopid, taptype);
 						}
 					}
 				}
 			}
 			
-			for(long pan : this.previousTaps.keySet()) { //Obtains the Single ON Taps and assigns them as incomplete. From the sixth assumption
-				tap incompleteTap = this.previousTaps.get(pan); 
-				long duration = currentTime.getTime() - incompleteTap.tapdate.getTime(); // THe current time is the latest in the JSON that has been read.
-				duration = duration/1000;
-				if (incompleteTap.taptype == TapType.ON) {   
-					JSONObject incompletetripObject =  fillJsonOutput(incompleteTap, incompleteTap, TripStatus.INCOMPLETE, duration, pan);
-					tripsArray.add(incompletetripObject);
-				}
-				
-			}
+			tripsArray = writeRemainingIncompleteTrips(tripsArray, currentTime);
+			
+			writeJson(tripsArray);
 
-			JSONObject outputObject = new JSONObject(); //Creating output object that will be printed to the JSON file
-			ObjectMapper mapper = new ObjectMapper();
-
-			outputObject.put("trips", tripsArray); 
-			String outputstring = mapper.defaultPrettyPrintingWriter().writeValueAsString(outputObject);
-			FileWriter fw = new FileWriter("src/trips.json", false); //Auto formatting JSON
-			fw.write(outputstring);
-			fw.flush();
+			
 
 		} catch (FileNotFoundException e) { //Exception handling
 			e.printStackTrace();
@@ -240,5 +230,47 @@ public class TapSystem {
 			e.printStackTrace();
 		}
 	}
+	
+	public void writeJson(JSONArray tripsArray) {
+		try {
+			JSONObject outputObject = new JSONObject(); //Creating output object that will be printed to the JSON file
+			ObjectMapper mapper = new ObjectMapper();
+
+			outputObject.put("trips", tripsArray); 
+			String outputstring = mapper.defaultPrettyPrintingWriter().writeValueAsString(outputObject);
+			FileWriter fw = new FileWriter("src/trips.json", false); //Auto formatting JSON
+			fw.write(outputstring);
+			fw.flush();
+			
+		} catch (FileNotFoundException e) { //Exception handling
+			e.printStackTrace();
+		} catch (JsonGenerationException e) {
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public JSONArray writeRemainingIncompleteTrips(JSONArray tripsArray, Date currentTime) {
+		
+		for(long pan : this.previousTaps.keySet()) { //Obtains the Single ON Taps and assigns them as incomplete. From the sixth assumption
+			tap incompleteTap = this.previousTaps.get(pan); 
+			long duration = currentTime.getTime() - incompleteTap.getTapDate().getTime(); // THe current time is the latest in the JSON that has been read.
+			duration = duration/1000;
+			if (incompleteTap.getTapType() == TapType.ON) {   
+				JSONObject incompletetripObject =  fillJsonOutput(incompleteTap, incompleteTap, TripStatus.INCOMPLETE, duration, pan);
+				tripsArray.add(incompletetripObject);
+			}
+			
+		}
+		
+		return tripsArray;
+	}
+	
+	
 
 }
